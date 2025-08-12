@@ -184,7 +184,7 @@ defmodule ExOpcua.DataTypes.NodeId do
         } = n_id
       )
       when mask in [3, 5] do
-    ("ns=" <> Integer.to_string(namespace_idx) <> ";i=" <> identifier)
+    ("ns=" <> Integer.to_string(namespace_idx) <> ";s=" <> identifier)
     |> has_additional_to_string(n_id)
   end
 

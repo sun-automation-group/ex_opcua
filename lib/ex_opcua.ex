@@ -16,14 +16,6 @@ defmodule ExOpcua do
     Session.start_session(opts)
   end
 
-  def send(pid) do
-    GenServer.cast(pid, :send)
-  end
-
-  def read(pid) do
-    GenServer.call(pid, :read)
-  end
-
   def close_session(pid) do
     GenServer.call(pid, :close_session)
   end

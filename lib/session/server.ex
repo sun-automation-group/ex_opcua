@@ -52,16 +52,6 @@ defmodule ExOpcua.Session.Server do
     {:noreply, state}
   end
 
-  # # TODO: Just a garbage message for testing currently
-  # @impl GenServer
-  # def handle_cast(:send, %{socket: socket} = s) do
-  #   s = Session.check_session(s)
-  #   :gen_tcp.send(socket, Protocol.encode_message(:browse_request, s))
-  #   result = Protocol.recieve_message(socket)
-  #   IO.inspect(result)
-  #   {:noreply, s}
-  # end
-
   @impl GenServer
   def handle_call({:read_all, node_ids}, _from, %{socket: socket} = s) do
     s = Session.check_session(s)
