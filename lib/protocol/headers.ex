@@ -100,9 +100,16 @@ defmodule ExOpcua.Protocol.Headers do
 
   def take(
         <<"ERR"::binary, _chunk_type::bytes-size(1), _msg_size::int(32),
-          error_type::bytes-size(4), deserialize_string(reason), _::binary>>
+          error_type::bytes-size(4), deserialize_string(reason), rest::binary>>
       ) do
-    {%ErrHeader{error_type: error_type, reason: reason}, <<>>}
+    {%ErrHeader{error_type: error_type, reason: reason}, rest}
+  end
+
+  def take(
+        <<"ERR"::binary, _chunk_type::bytes-size(1), _msg_size::int(32),
+          error_type::bytes-size(4), rest::binary>>
+      ) do
+    {%ErrHeader{error_type: error_type}, rest}
   end
 
   def take(output) do

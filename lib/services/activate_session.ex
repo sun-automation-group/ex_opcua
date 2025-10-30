@@ -46,7 +46,7 @@ defmodule ExOpcua.Services.ActivateSession do
       # client identity (ANONYMOUS)
       0x01,
       0x00,
-      0x41,
+      0x3F,
       0x01,
       0x01,
       0x0D,
@@ -60,3 +60,15 @@ defmodule ExOpcua.Services.ActivateSession do
     >>
   end
 end
+
+
+# {var, obj} = Enum.reduce(r, {[], []}, fn 
+#   %{node_class: :variable} = r, {var, obj} -> 
+#     id = ExOpcua.DataTypes.NodeId.to_string(r.node_id)
+#     {[id | var], obj}
+#   %{node_class: :object} = r, {var, obj} -> 
+#     id = ExOpcua.DataTypes.NodeId.to_string(r.node_id)
+#     {var, [id | obj]}
+# end)
+
+

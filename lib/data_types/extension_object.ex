@@ -32,7 +32,7 @@ defmodule ExOpcua.DataTypes.ExtensionObject do
           value
 
         :error ->
-          "Data Type Not Implemented"
+          "Data Type #{inspect(node_id.identifier)} Not Implemented"
       end
 
     {value, rest}

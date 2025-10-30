@@ -59,9 +59,9 @@ defmodule ExOpcua.SecurityProfile do
   def new(
         sec_mode \\ :none,
         sec_profile \\ :none,
+        server_public_key \\ nil,
         client_private_key \\ nil,
-        client_cert_der \\ nil,
-        server_public_key \\ nil
+        client_cert_der \\ nil
       )
 
   def new(:none, _, _, _, _), do: {:ok, %__MODULE__{}}
