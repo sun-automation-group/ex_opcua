@@ -46,14 +46,14 @@ defmodule ExOpcua.Services.ActivateSession do
       # client identity (ANONYMOUS)
       0x01,
       0x00,
-      0x3F,
+      0x41,
       0x01,
       0x01,
       0x0D,
       0x00,
       0x00,
       0x00,
-      serialize_string("Anonymous"),
+      serialize_string("anonymous"),
       # signature data
       opc_null_value(),
       opc_null_value()
