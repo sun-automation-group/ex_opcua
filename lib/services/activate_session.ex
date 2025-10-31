@@ -53,7 +53,7 @@ defmodule ExOpcua.Services.ActivateSession do
       0x00,
       0x00,
       0x00,
-      serialize_string("anonymous"),
+      serialize_string("Anonymous"),
       # signature data
       opc_null_value(),
       opc_null_value()
