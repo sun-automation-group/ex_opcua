@@ -54,8 +54,6 @@ defmodule ExOpcua.Session.Server do
 
   @impl GenServer
   def handle_call({:read_all, node_ids}, _from, %{socket: socket} = s) do
-    s = Session.check_session(s)
-
     {s, req} =
       node_ids
       |> Services.Read.encode_read_all(s)
@@ -70,8 +68,6 @@ defmodule ExOpcua.Session.Server do
 
   @impl GenServer
   def handle_call({:read_attrs, node_ids, attrs}, _from, %{socket: socket} = s) do
-    s = Session.check_session(s)
-
     {s, req} =
       node_ids
       |> Services.Read.encode_read_attrs(attrs, s)
@@ -87,7 +83,6 @@ defmodule ExOpcua.Session.Server do
   @impl GenServer
   def handle_call({:browse, node_id, opts}, _from, %{socket: socket} = s) do
     b_desc = struct(ExOpcua.DataTypes.BrowseDescription, [node_id: node_id] ++ opts)
-    s = Session.check_session(s)
 
     {s, req} =
       b_desc
