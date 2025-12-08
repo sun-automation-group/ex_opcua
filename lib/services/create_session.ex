@@ -17,10 +17,8 @@ defmodule ExOpcua.Services.CreateSession do
         %{
           session_id: session_id,
           auth_token: auth_token,
-          revised_session_timeout: round(revised_session_timeout),
+          revised_session_timeout: revised_session_timeout,
           server_session_signature: server_cert <> server_nonce,
-          session_expire_time:
-            DateTime.add(DateTime.utc_now(), revised_session_timeout, :millisecond),
           endpoint_descriptions: endpoint_descriptions
         }
       }
@@ -67,4 +65,3 @@ defmodule ExOpcua.Services.CreateSession do
   defp take_revised_timeout(<<revised_session_timeout::ldouble, rest::binary>>) do
     {round(revised_session_timeout), rest}
   end
-end

@@ -222,20 +222,6 @@ defmodule ExOpcua.Session do
     end
   end
 
-  def check_session(
-        %State{
-          session_expire_time: expire_time
-        } = s
-      ) do
-    if DateTime.compare(DateTime.utc_now(), expire_time) == :lt do
-      s
-    else
-      s
-      |> create_session()
-      |> activate_session()
-    end
-  end
-
   def reset_state(%State{ip: ip, url: url, handler: handler, port: port}),
     do: %State{ip: ip, url: url, handler: handler, port: port}
 end
