@@ -6,7 +6,7 @@ defmodule ExOpcua.DataTypes.BrowseDescription do
   defstruct [
     :node_id,
     browse_direction: :forward,
-    reference_type_id: %NodeId{encoding_mask: 0, identifier: 35},
+    reference_type_id: %NodeId{encoding_mask: 0, identifier: 33},
     include_subtypes: true,
     node_class_mask: 0,
     result_mask: 31
