@@ -65,3 +65,4 @@ defmodule ExOpcua.Services.CreateSession do
   defp take_revised_timeout(<<revised_session_timeout::ldouble, rest::binary>>) do
     {round(revised_session_timeout), rest}
   end
+end
