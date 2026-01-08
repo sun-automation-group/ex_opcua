@@ -204,11 +204,11 @@ defmodule ExOpcua.Protocol do
 
   @spec decode_message({struct(), binary() | <<>>} | {:error, atom()}) ::
           {:ok, %{payload: any, header: struct()}} | {:error, atom()}
-  def decode_message({header, <<>>}) do
+  def decode_message({%{} = header, <<>>}) do
     {:ok, %{header: header, payload: nil}}
   end
 
-  def decode_message({header, bin_message}) do
+  def decode_message({%{} = header, bin_message}) do
     case Services.decode(bin_message) do
       {:ok, decoded_message} ->
         {:ok, %{header: header, payload: decoded_message}}

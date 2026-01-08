@@ -60,3 +60,15 @@ defmodule ExOpcua.Services.ActivateSession do
     >>
   end
 end
+
+
+# {var, obj} = Enum.reduce(r, {[], []}, fn 
+#   %{node_class: :variable} = r, {var, obj} -> 
+#     id = ExOpcua.DataTypes.NodeId.to_string(r.node_id)
+#     {[id | var], obj}
+#   %{node_class: :object} = r, {var, obj} -> 
+#     id = ExOpcua.DataTypes.NodeId.to_string(r.node_id)
+#     {var, [id | obj]}
+# end)
+
+

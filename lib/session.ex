@@ -56,7 +56,8 @@ defmodule ExOpcua.Session do
           message_sec_mode: sec_mode,
           server_cert: server_cert,
           sec_policy_uri: sec_policy_uri
-        } = endpoint
+        }, 
+        opts \\ []
       ) do
     %{host: host, port: port} = URI.parse(url)
 
@@ -71,27 +72,12 @@ defmodule ExOpcua.Session do
 
     handler = ExOpcua.Session.Handler
 
-    {:ok, sec_profile} = SecurityProfile.new(sec_mode, sec_policy, server_cert)
-
-    # initial values
-    state = %State{
-      handler: handler,
-      security_profile: sec_profile,
-      ip: ip,
-      port: port,
-      url: url
-    }
-
-    GenServer.start_link(__MODULE__.Server, state, [])
-  end
-
-  def start_session(opts \\ []) do
-    ip = opts[:ip] || "127.0.0.1"
-    port = opts[:port] || 4840
-    url = opts[:url] || "opc.tcp://#{ip}:#{port}"
-
-    handler = opts[:handler] || ExOpcua.Session.Handler
-    %SecurityProfile{} = sec_profile = opts[:security_profile] || SecurityProfile.new()
+    {:ok, sec_profile} = SecurityProfile.new(sec_mode, 
+      sec_policy, 
+      server_cert, 
+      opts[:client_key_der], 
+      opts[:client_cert_der]
+    )
 
     # initial values
     state = %State{

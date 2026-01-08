@@ -31,7 +31,7 @@ defmodule ExOpcua.DataTypes.EndpointDescription do
           security_level: integer()
         }
 
-  @security_modes [:invalid, :none, :sign, :sign_and_encrypt]
+  @security_modes [:invalid, :none, :sign, :sign_encrypt]
 
   @doc """
   	Takes in a binary beginning with an Endpoint Description

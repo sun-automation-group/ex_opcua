@@ -7,6 +7,7 @@ defmodule ExOpcua.MixProject do
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps()
     ]
   end
@@ -17,6 +18,10 @@ defmodule ExOpcua.MixProject do
       extra_applications: [:logger]
     ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:prod), do: ["lib"]
+  defp elixirc_paths(_), do: ["lib", "test"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do

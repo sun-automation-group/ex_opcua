@@ -12,8 +12,8 @@ defmodule ExOpcua do
   alias ExOpcua.DataTypes.EndpointDescription
   import ExOpcua.Protocol.RootNamespaceNodeIDMappings
 
-  def start_session(opts \\ []) do
-    Session.start_session(opts)
+  def start_session(endpoint, opts \\ []) do
+    Session.start_session(endpoint, opts)
   end
 
   def close_session(pid) do
