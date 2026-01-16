@@ -7,8 +7,7 @@ defmodule ExOpcua.Services.OpenSecureChannel do
 
   def decode_response(
         <<_server_proto_ver::int(32), sec_channel_id::int(32), token_id::int(32),
-          token_created_at::int(64), revised_lifetime_in_ms::int(32),
-          rest::binary>>
+          token_created_at::int(64), revised_lifetime_in_ms::int(32), rest::binary>>
       ) do
     with {nonce, rest} <- OpcString.take(rest) do
       {:ok,
@@ -17,7 +16,8 @@ defmodule ExOpcua.Services.OpenSecureChannel do
          token_id: token_id,
          token_created_at: Timestamp.to_datetime(token_created_at),
          revised_lifetime_in_ms: revised_lifetime_in_ms,
-         token_expire_time: DateTime.add(DateTime.utc_now(), revised_lifetime_in_ms, :millisecond),
+         token_expire_time:
+           DateTime.add(DateTime.utc_now(), revised_lifetime_in_ms, :millisecond),
          server_nonce: nonce
        }}
     end
