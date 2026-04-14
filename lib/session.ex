@@ -2,6 +2,7 @@ defmodule ExOpcua.Session do
   alias ExOpcua.Protocol.Headers
   alias ExOpcua.{Protocol, SecurityProfile, Services}
   alias ExOpcua.DataTypes.EndpointDescription
+  alias ExOpcua.ParameterTypes.UserTokenPolicy
 
   defmodule State do
     defstruct [
@@ -12,6 +13,7 @@ defmodule ExOpcua.Session do
       :endpoint,
       :socket,
       :token_id,
+      :user_id_token,
       :sender_cert,
       :recv_cert,
       :session_expire_time,
@@ -31,17 +33,11 @@ defmodule ExOpcua.Session do
   @doc """
   Main Entry Point for OPCUA communications
   ## Options
-
-    * `:ip` - Ip Address of OPCUA Server. Defaults to `20.0.0.170`
-
-    * `:port` - Port number of OPCUA Server. Defaults to `4840`
-
-    * `:endpoint` - `REQUIRED` Endpoint Description for OPCUA (see `ExOpcua.discover_endpoints/1`)
-
-    * `:handler` - Callback handler for responses. See ExOpcua.Session.Handler
-
-    * `:encryption` - Encryption structure used by this session. See
-    (see `ExOpcua.Encryption.generate/1`) Defaults to `:none`
+    * client_key_der REQUIRED IF there is sign and/or encrypt in the security policy
+    * client_cert_der REQUIRED IF there is sign and/or encrypt in the security policy
+    * user_token_type: REQUIRED if there is username or key policy. Defaults to :anonymous. 
+                        Currently Supported [:anonymous]
+    * user_token_params: Required if identity is NOT anonymous
 
   ## Examples
 
@@ -55,8 +51,9 @@ defmodule ExOpcua.Session do
           url: url,
           message_sec_mode: sec_mode,
           server_cert: server_cert,
-          sec_policy_uri: sec_policy_uri
-        }, 
+          sec_policy_uri: sec_policy_uri,
+          user_id_tokens: uid_tokens
+        },
         opts \\ []
       ) do
     %{host: host, port: port} = URI.parse(url)
@@ -70,19 +67,30 @@ defmodule ExOpcua.Session do
     port = port || 4840
     sec_policy = SecurityProfile.decode_sec_policy_uri(sec_policy_uri)
 
+    user_token_type = opts[:user_token_type] || :anonymous
+
+    %UserTokenPolicy{} =
+      user_token_policy =
+      Enum.find(uid_tokens, fn uid -> Map.get(uid, :user_token_type) == user_token_type end)
+
+    user_id_token = ExOpcua.Protocol.UserIdentityToken.new(user_token_policy, opts[:user_token_params])
+
     handler = ExOpcua.Session.Handler
 
-    {:ok, sec_profile} = SecurityProfile.new(sec_mode, 
-      sec_policy, 
-      server_cert, 
-      opts[:client_key_der], 
-      opts[:client_cert_der]
-    )
+    {:ok, sec_profile} =
+      SecurityProfile.new(
+        sec_mode,
+        sec_policy,
+        server_cert,
+        opts[:client_key_der],
+        opts[:client_cert_der]
+      )
 
     # initial values
     state = %State{
       handler: handler,
       security_profile: sec_profile,
+      user_id_token: user_id_token,
       ip: ip,
       port: port,
       url: url

@@ -2,6 +2,7 @@ defmodule ExOpcua.Services.ActivateSession do
   import ExOpcua.DataTypes.BuiltInDataTypes.Macros
   alias ExOpcua.DataTypes.NodeId
   alias ExOpcua.DataTypes.BuiltInDataTypes.{OpcString, Timestamp}
+  alias ExOpcua.Protocol.UserIdentityToken
 
   def decode_response(<<
         deserialize_string(_server_nonce),
@@ -15,7 +16,7 @@ defmodule ExOpcua.Services.ActivateSession do
     {:ok, %{activated: true}}
   end
 
-  def encode_command(%{auth_token: auth_token, session_signature: signature}) do
+  def encode_command(%{auth_token: auth_token, session_signature: signature, user_id_token: uid_token}) do
     <<
       0x01,
       0x00,
@@ -43,32 +44,10 @@ defmodule ExOpcua.Services.ActivateSession do
       1::int(32),
       2::int(32),
       "en",
-      # client identity (ANONYMOUS)
-      0x01,
-      0x00,
-      0x41,
-      0x01,
-      0x01,
-      0x0D,
-      0x00,
-      0x00,
-      0x00,
-      serialize_string("Anonymous"),
+      UserIdentityToken.serialize(uid_token)::binary,
       # signature data
       opc_null_value(),
       opc_null_value()
     >>
   end
 end
-
-
-# {var, obj} = Enum.reduce(r, {[], []}, fn 
-#   %{node_class: :variable} = r, {var, obj} -> 
-#     id = ExOpcua.DataTypes.NodeId.to_string(r.node_id)
-#     {[id | var], obj}
-#   %{node_class: :object} = r, {var, obj} -> 
-#     id = ExOpcua.DataTypes.NodeId.to_string(r.node_id)
-#     {var, [id | obj]}
-# end)
-
-
